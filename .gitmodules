@@ -1,0 +1,9 @@
+[submodule "DAIN"]
+	path = DAIN
+	url = https://gitee.com/mirrors/DAIN.git
+[submodule "USRNet"]
+	path = USRNet
+	url = https://gitee.com/likangGit/USRNet.git
+[submodule "DeepRemaster"]
+	path = DeepRemaster
+	url = https://gitee.com/likangGit/siggraphasia2019_remastering.git
