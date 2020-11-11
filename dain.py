@@ -10,7 +10,7 @@ from DAIN import networks
 from scipy.misc import imread, imsave
 from DAIN.AverageMeter import  *
 import shutil
-from utils import OP
+from interface import OP
 
 class DAIN(OP):
     '''
@@ -27,8 +27,9 @@ class DAIN(OP):
         self._timestep = timestep
         self._save_which = save_which
 
-    def exec(self):
-        assert os.path.exists(self.inputdir), 'No such file:{}'.format(self.inputdir)
+    def exec(self, param):
+        inputdir = param['inputdir']
+        assert os.path.exists(inputdir), 'No such file:{}'.format(inputdir)
 
         torch.backends.cudnn.benchmark = True # to speed up the
 
@@ -64,7 +65,7 @@ class DAIN(OP):
         model = model.eval() # deploy mode
         use_cuda=torch.cuda.is_available()
 
-        inputfiles = os.listdir(self.inputdir)
+        inputfiles = os.listdir(inputdir)
         
 
         tot_timer = AverageMeter()
@@ -72,8 +73,8 @@ class DAIN(OP):
         end = time.time()
         output_pos = 1
         for input_pos in tqdm(range(1,len(inputfiles)) ): 
-            arguments_strFirst = os.path.join(self.inputdir, '{}.png'.format(input_pos))
-            arguments_strSecond = os.path.join(self.inputdir, '{}.png'.format(input_pos+1))
+            arguments_strFirst = os.path.join(inputdir, '{}.png'.format(input_pos))
+            arguments_strSecond = os.path.join(inputdir, '{}.png'.format(input_pos+1))
             dtype = torch.cuda.FloatTensor
             X0 =  torch.from_numpy( np.transpose(imread(arguments_strFirst) , (2,0,1)).astype("float32")/ 255.0).type(dtype)
             X1 =  torch.from_numpy( np.transpose(imread(arguments_strSecond) , (2,0,1)).astype("float32")/ 255.0).type(dtype)
@@ -136,17 +137,18 @@ class DAIN(OP):
             y_ = [np.transpose(255.0 * item.clip(0,1.0)[0, :, intPaddingTop:intPaddingTop+intHeight,
                                     intPaddingLeft: intPaddingLeft+intWidth], (1, 2, 0)) for item in y_]
 
-            shutil.copy(arguments_strFirst, os.path.join(self.outputdir,"{:0>8d}.png".format(output_pos)))
+            shutil.copy(arguments_strFirst, os.path.join(self.outputdir,"{}.png".format(output_pos)))
             output_pos  = output_pos + 1
             for item in y_:
-                arguments_strOut = os.path.join(self.outputdir,"{:0>8d}.png".format(output_pos))
+                arguments_strOut = os.path.join(self.outputdir,"{}.png".format(output_pos))
                 output_pos = output_pos + 1
                 imsave(arguments_strOut, np.round(item).astype(np.uint8))
         # copy the last frame as the network output
         numFrames = int(1.0 / self._timestep)
         for _ in range( numFrames):
-            shutil.copy(arguments_strSecond, os.path.join(self.outputdir, "{:0>8d}.png".format(output_pos)))
+            shutil.copy(arguments_strSecond, os.path.join(self.outputdir, "{}.png".format(output_pos)))
             output_pos = output_pos + 1
+        param['fps'] = int(1/self._timestep) * param['fps']
 
 
          

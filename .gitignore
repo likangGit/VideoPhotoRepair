@@ -1,4 +1,4 @@
-temp/
+results/
 __pycache__/
 .vscode/
 checkpoints/
