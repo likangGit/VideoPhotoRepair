@@ -45,9 +45,13 @@ args = parser.parse_args()
 
 assert os.path.exists(args.input), "No such file:{}".format(args.input)
 assert len(args.operation) <= 3, "Too many operation. The number of operatoin should be less than or equal 3. "
-assert ('dain' in args.operation) or ('remaster' in args.operation) and (args.fps != -1), 'you need to set fps parameter'
+if os.path.isdir(args.input):
+    assert ( ('dain' in args.operation) or ('remaster' in args.operation) ) and (args.fps != -1), 'you need to set fps parameter'
 if ('remaster' in args.operation) and (args.refer_dir=='none'):
     warnings.warn('If you want to convert greyscale image to a color image,you should set --refer_dir')
+if args.refer_dir != 'none':
+    assert os.path.exists(args.refer_dir), 'No such directory:{}'.format(args.refer_dir)
+warnings.filterwarnings('ignore')
 
 result_folder = 'results'
 if not os.path.exists(result_folder):
@@ -79,7 +83,8 @@ if os.path.isfile(args.input):
 else:
     ops = args.operation
     exec_param['fps'] = args.fps
-
+# ops = ['tovideo',]
+# exec_param = {'inputdir':'results/remaster', 'fps':12}
 for op in ops:
     printInfo('{} operation start'.format(op))
 

@@ -46,7 +46,7 @@ class USR(OP):
         kernel = util.single2tensor4(k[..., np.newaxis])
 
         #load model
-        model_path = os.path.join( 'USRNet','model_zoo', model_name+'.pth')
+        model_path = os.path.join('model_weights', model_name+'.pth')
         self._device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         if 'tiny' in model_name:
             model = net(n_iter=6, h_nc=32, in_nc=4, out_nc=3, nc=[16, 32, 64, 64],

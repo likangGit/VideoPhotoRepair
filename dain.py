@@ -41,7 +41,7 @@ class DAIN(OP):
         if torch.cuda.is_available():
             model = model.cuda()
 
-        weight_file = 'DAIN/model_weights/best.pth'
+        weight_file = 'model_weights/dain.pth'
         assert os.path.exists(weight_file), 'No such file:{}'.format(weight_file)
         print("The testing model weight is: " + weight_file)
         if not torch.cuda.is_available():

@@ -32,8 +32,10 @@ class ToVideo(OP):
             os.path.join(param_dict['inputdir'], '%d.png'),
             os.path.join(self.outputdir, 'result.mp4')
             )
-        p = subprocess.Popen(cmd,shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding='utf-8')
-        while p.poll() is None:
-            line = p.stdout.readline().rstrip()
-            end = '\r' if (('frame=' in line) and ('fps=' in line) and ('time=' in line)) else '\n'
-            print(line, end=end)
+        print(cmd)
+        subprocess.call(cmd, shell=True)
+        # p = subprocess.Popen(cmd,shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding='utf-8')
+        # while p.poll() is None:
+        #     line = p.stdout.readline().rstrip()
+        #     end = '\r' if (('frame=' in line) and ('fps=' in line) and ('time=' in line)) else '\n'
+        #     print(line, end=end)

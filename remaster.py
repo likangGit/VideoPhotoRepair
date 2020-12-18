@@ -40,7 +40,7 @@ class Remaster(OP):
             self._all_refs.sort(key=lambda x: x[1])
 
         # Load remaster network
-        state_dict = torch.load( 'DeepRemaster/model/remasternet.pth.tar' )
+        state_dict = torch.load( 'model_weights/remasternet.pth.tar' )
         if not self._disable_restore:
             modelR = __import__( 'DeepRemaster.model.remasternet', fromlist=['NetworkR'] ).NetworkR()
             modelR.load_state_dict( state_dict['modelR'] )
