@@ -45,8 +45,8 @@ args = parser.parse_args()
 
 assert os.path.exists(args.input), "No such file:{}".format(args.input)
 assert len(args.operation) <= 3, "Too many operation. The number of operatoin should be less than or equal 3. "
-if os.path.isdir(args.input):
-    assert ( ('dain' in args.operation) or ('remaster' in args.operation) ) and (args.fps != -1), 'you need to set fps parameter'
+if os.path.isdir(args.input) and ( ('dain' in args.operation) or ('remaster' in args.operation) ):
+    assert args.fps != -1, 'you need to set fps parameter'
 if ('remaster' in args.operation) and (args.refer_dir=='none'):
     warnings.warn('If you want to convert greyscale image to a color image,you should set --refer_dir')
 if args.refer_dir != 'none':
